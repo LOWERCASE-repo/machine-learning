@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using System; // TODO switch to linq
 
 internal class Brain : IComparable<Brain> {
 	
@@ -26,7 +26,7 @@ internal class Brain : IComparable<Brain> {
 				float value = 0f;
 				for (int k = 0; k < neurons[i - 1].Length; k++) {
 					value += weights[i - 1][j][k] * neurons[i - 1][k];
-				} // softsign
+				}
 				neurons[i][j] = value / (Math.Abs(value) + 1f);
 			}
 		}
@@ -60,7 +60,7 @@ internal class Brain : IComparable<Brain> {
 	}
 	
 	private float MutateSingle(float value) {
-		float randomNumber = UnityEngine.Random.Range(0f, 100f);
+		float randomNumber = UnityEngine.Random.Range(0f, 10f);
 		if (randomNumber <= 2f) value = 0f;
 		else if (randomNumber <= 4f) value = UnityEngine.Random.Range(-1f, 1f);
 		else if (randomNumber <= 6f) value *= UnityEngine.Random.Range(0f, 1f);
@@ -70,6 +70,6 @@ internal class Brain : IComparable<Brain> {
 	}
 	
 	public int CompareTo(Brain other) {
-		return Math.Sign(fitness - other.fitness);
+		return Math.Sign(other.fitness - fitness);
 	}
 }
