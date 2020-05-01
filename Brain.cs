@@ -1,15 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using System; // TODO switch to linq
 
-internal class Brain : IComparable<Brain> {
+internal class Brain {
 	
 	internal float fitness;
 	private float[][] neurons; // [layer][neuron]
 	private float[][][] weights; // [layer][neuron][previous neuron]
 	
-	internal Brain(int[] neuronCounts) {
+	internal Brain(params int[] neuronCounts) {
 		InitNeurons(neuronCounts);
 		InitWeights();
 	}
@@ -19,7 +18,7 @@ internal class Brain : IComparable<Brain> {
 		this.weights = network.weights.Select(i => i.Select(j => j.ToArray()).ToArray()).ToArray();
 	}
 	
-	internal float[] Eval(float[] inputs) {
+	internal float[] Eval(params float[] inputs) {
 		neurons[0] = inputs.Select(i => i).ToArray();
 		for (int i = 1; i < neurons.Length; i++) {
 			for (int j = 0; j < neurons[i].Length; j++) {
@@ -27,7 +26,7 @@ internal class Brain : IComparable<Brain> {
 				for (int k = 0; k < neurons[i - 1].Length; k++) {
 					value += weights[i - 1][j][k] * neurons[i - 1][k];
 				}
-				neurons[i][j] = value / (Math.Abs(value) + 1f);
+				neurons[i][j] = value / (Mathf.Abs(value) + 1f);
 			}
 		}
 		return neurons[neurons.Length - 1];
@@ -67,9 +66,5 @@ internal class Brain : IComparable<Brain> {
 		else if (randomNumber <= 8f) value *= UnityEngine.Random.Range(1f, 2f);
 		else if (randomNumber <= 10f) value = -value;
 		return value;
-	}
-	
-	public int CompareTo(Brain other) {
-		return Math.Sign(other.fitness - fitness);
 	}
 }
